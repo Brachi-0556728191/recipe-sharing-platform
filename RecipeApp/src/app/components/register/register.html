@@ -1,0 +1,160 @@
+<div class="signin-wrapper">
+  <div class="auth-form-container" style="max-width: 500px;">
+    <h2>הרשמה לקהילה</h2>
+
+    <div *ngIf="errorMessage" class="global-error">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onRegister()" #registerForm="ngForm" autocomplete="off">
+
+      <div class="field-wrapper">
+        <input type="text" id="firstName" name="first_name" [(ngModel)]="userData.first_name" required
+          pattern="[A-Zא-ת][a-zA-Zא-ת\s]*" #firstNameField="ngModel" placeholder=" "
+          (focus)="serverErrors().first_name = ''"
+          [class.input-error]="serverErrors().first_name || (firstNameField.invalid && firstNameField.touched)">
+
+        <label for="firstName">שם פרטי</label>
+
+        <div *ngIf="firstNameField.invalid && firstNameField.touched" class="field-error-msg">
+          <span *ngIf="firstNameField.errors?.['required']">שדה חובה</span>
+          <span *ngIf="firstNameField.errors?.['pattern']">אות גדולה בהתחלה</span>
+        </div>
+        <div *ngIf="serverErrors().first_name" class="field-error-msg">
+          {{ serverErrors().first_name }}
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input type="text" id="lastName" name="last_name" [(ngModel)]="userData.last_name" required
+          pattern="[A-Zא-ת][a-zA-Zא-ת\s]*" #lastNameField="ngModel" placeholder=" "
+          (focus)="serverErrors().last_name = ''"
+          [class.input-error]="serverErrors().last_name || (lastNameField.invalid && lastNameField.touched)">
+
+        <label for="lastName">שם משפחה</label>
+
+        <div *ngIf="lastNameField.invalid && lastNameField.touched" class="field-error-msg">
+          <span *ngIf="lastNameField.errors?.['required']">שדה חובה</span>
+          <span *ngIf="lastNameField.errors?.['pattern']">אות גדולה בהתחלה</span>
+        </div>
+        <div *ngIf="serverErrors().last_name" class="field-error-msg">
+          {{ serverErrors().last_name }}
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input type="email" id="email" name="email" [(ngModel)]="userData.email" required email #emailField="ngModel"
+          placeholder=" " list="emailSuggestionsList" (input)="onEmailInput($event)" (focus)="serverErrors().email = ''"
+          [class.input-error]="serverErrors().email || (emailField.invalid && emailField.touched)">
+
+        <label for="email">כתובת אימייל</label>
+
+        <datalist id="emailSuggestionsList">
+          <option *ngFor="let email of suggestedEmails" [value]="email"></option>
+        </datalist>
+
+        <div *ngIf="emailField.invalid && emailField.touched" class="field-error-msg">
+          <span *ngIf="emailField.errors?.['required']">שדה חובה</span>
+          <span *ngIf="emailField.errors?.['email']">כתובת לא תקינה</span>
+        </div>
+
+        <div *ngIf="serverErrors().email" class="field-error-msg">
+          {{ serverErrors().email }}
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="userData.password"
+          required minlength="6" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}" #passwordField="ngModel"
+          placeholder=" " (focus)="serverErrors().password = ''"
+          [class.input-error]="serverErrors().password || (passwordField.invalid && passwordField.touched)">
+
+        <label for="password">סיסמה</label>
+
+        <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+          <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"></path>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+          </svg>
+        </button>
+
+        <div *ngIf="passwordField.invalid && passwordField.touched" class="field-error-msg">
+          <span *ngIf="passwordField.errors?.['required']">שדה חובה</span>
+          <span *ngIf="passwordField.errors?.['minlength']">לפחות 6 תווים</span>
+          <span *ngIf="passwordField.errors?.['pattern'] && passwordField.errors?.['minlength']">, </span>
+          <span *ngIf="passwordField.errors?.['pattern']">נדרש: אות גדולה, קטנה, מספר ותו מיוחד</span>
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword"
+          [(ngModel)]="userData.confirmPassword" required #confirmPasswordField="ngModel" placeholder=" "
+          [class.input-error]="(confirmPasswordField.touched && confirmPasswordField.invalid) || (userData.password !== userData.confirmPassword && confirmPasswordField.touched && !confirmPasswordField.errors?.['required'])">
+
+        <label for="confirmPassword">אימות סיסמה</label>
+
+        <button type="button" class="password-toggle-btn" (click)="toggleConfirmPasswordVisibility()">
+          <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"></path>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+          </svg>
+        </button>
+
+        <div
+          *ngIf="userData.password !== userData.confirmPassword && confirmPasswordField.touched && !confirmPasswordField.errors?.['required']"
+          class="field-error-msg">
+          הסיסמאות אינן תואמות
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input type="tel" id="phone" name="phone" [(ngModel)]="userData.phone" #phoneField="ngModel"
+          pattern="^(0[23489]\d{7}|0[57]\d{8})$" placeholder=" " (focus)="serverErrors().phone = ''">
+
+        <label for="phone">טלפון (אופציונלי)</label>
+
+        <div *ngIf="phoneField.invalid && phoneField.touched" class="field-error-msg">
+          מספר טלפון לא תקין
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <input type="text" id="address" name="address" [(ngModel)]="userData.address" pattern="[A-Zא-ת].*"
+          #addressField="ngModel" placeholder=" " (focus)="serverErrors().address = ''">
+
+        <label for="address">כתובת (אופציונלי)</label>
+
+        <div *ngIf="addressField.invalid && addressField.touched" class="field-error-msg">
+          הכתובת חייבת להתחיל באות
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid ||(userData.password !== userData.confirmPassword) || isLoading" class="loading-btn">
+        <span *ngIf="!isLoading">הרשמה</span>
+        <span *ngIf="isLoading">
+          מבצע הרשמה...
+          <span class="spinner"></span>
+        </span>
+      </button>
+
+      <a [routerLink]="['/login']" class="signup-link">
+        כבר יש לך חשבון? <strong>התחבר כאן</strong>
+      </a>
+
+    </form>
+  </div>
+</div>

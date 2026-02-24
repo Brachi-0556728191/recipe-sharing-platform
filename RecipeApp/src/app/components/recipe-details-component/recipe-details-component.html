@@ -1,0 +1,172 @@
+<div class="page-container">
+
+    <div class="top-bar">
+        <button class="btn-back" (click)="goBack()">
+            חזרה לגלריה ➔
+        </button>
+    </div>
+
+    <!-- גלריית תמונות בצד ימין של התמונה הראשית -->
+    <div class="recipe-card" *ngIf="!isLoading() && recipe() as r">
+        <section class="product-hero">
+            <div class="media-gallery">
+                <div class="thumbnails-col">
+                    <div class="thumb-item" *ngIf="r.main_image_url">
+                        <img [src]="r.main_image_url" [alt]="r.title" (click)="changeMainImage(r.main_image_url!)">
+                    </div>
+                    <div class="thumb-item" *ngFor="let v of r.variations || []">
+                        <img [src]="v.url" [alt]="v.effect" (click)="changeMainImage(v.url)">
+                    </div>
+                    <div class="thumb-item" *ngIf="r.main_image_url">
+                        <img [src]="r.main_image_url" [alt]="r.title" (click)="changeMainImage(r.main_image_url!)">
+                    </div>
+                </div>
+
+                <!-- תמונה ראשית -->
+                <div class="main-image-container">
+                    <img [src]="selectedImageUrl()" [alt]="r.title" class="main-img">
+                    <div class="badges-overlay">
+                        <span class="badge kashrut">{{ getKashrutLabel(r.kashrut) }}</span>
+                        <span class="badge time">⏱️ {{ r.prep_time }} דק'</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- תיאור המתכון -->
+            <div class="recipe-intro">
+                <span class="category-tag">{{ getCategoryLabel(r.category) }}</span>
+                <h1 class="recipe-title">{{ r.title }}</h1>
+                <div class="meta-row">
+                    <span class="author">מאת: <strong>{{ r.author || 'לא ידוע' }}</strong></span>
+                    <span class="difficulty">
+                        דרגת קושי: {{ getDifficultyLabel(r.difficulty) }}
+                    </span>
+                </div>
+
+                <!-- דירוג מתכון -->
+                <div class="rating-box">
+                    <div class="stars big-stars">
+                        <span *ngFor="let star of stars" class="star" [class.filled]="isStarActive(star)"
+                            (mouseenter)="setHover(star)" (mouseleave)="clearHover()"
+                            (click)="rateRecipe(star)">★</span>
+                    </div>
+
+                    <div class="rating-info">
+                        <span class="rating-avg" *ngIf="r.average_rating">
+                            ⭐ {{ r.average_rating | number:'1.1-1' }} (ממוצע)
+                        </span>
+                        <span class="user-rating-label" *ngIf="r.user_rating">
+                            | הדירוג שלך: {{ r.user_rating }}
+                        </span>
+                    </div>
+                </div>
+
+                <p class="description">{{ r.description }}</p>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" (click)="scrollToSection('ingredients')">🛒 לרכיבים</button>
+                    <button class="btn-outline" (click)="scrollToSection('instructions')">👨‍🍳 איך מכינים?</button>
+                </div>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- תוכן עיקרי של המתכון -->
+        <section class="recipe-body-grid">
+
+            <aside class="ingredients-section" id="ingredients">
+                <div class="section-header ingredients-header">
+
+                    <div class="ingredients-title">
+                        <h3>🛒 מצרכים</h3>
+                        <span class="servings">מנות: {{ r.servings || 4 }}</span>
+                    </div>
+
+                    <div class="print-actions compact">
+                        <button class="print-btn recipe" (click)="printRecipe()">
+                            🖨️ <span>הדפסת מתכון</span>
+                        </button>
+                        <button class="print-btn shopping" (click)="printShoppingList()">
+                            🛒 <span>רשימת קניות</span>
+                        </button>
+                    </div>
+
+                </div>
+
+
+    <ul class="checklist">
+        <li *ngFor="let ing of r.ingredients let i = index">
+            <label class="checkbox-container">
+                <input type="checkbox" (change)="toggleIngredient(i)">
+                <span class="checkmark"></span>
+                <span class="ing-text">
+                    <strong>{{ ing.amount }} {{ ing.unit }}</strong> {{ ing.name }}
+                </span>
+            </label>
+        </li>
+    </ul>
+    </aside>
+
+    <div class="instructions-section" id="instructions">
+        <h3>👨‍🍳 הוראות הכנה</h3>
+        <div class="steps-container">
+            <div class="step-item" *ngFor="let step of formatInstructions(r.instructions); let i = index">
+                <div class="step-number">{{ i + 1 }}</div>
+                <div class="step-content">
+                    <p>{{ step }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+    <p class="ingredients-hint">
+        💡 טיפ: סמני ✓ ליד מצרכים שכבר יש לך בבית –
+        רשימת הקניות תכלול רק את מה שחסר
+    </p>
+    <!-- תגובות -->
+    <section class="comments-full-width">
+        <div class="comments-header">
+            <h3>💬 תגובות ({{ comments().length }})</h3>
+        </div>
+
+        <!-- תיבת הוספת תגובה -->
+        <div class="add-comment-box">
+            <textarea [value]="newCommentContent()" (input)="updateComment($any($event.target).value)"
+                placeholder="איך יצא לך? שתף אותנו..."></textarea>
+            <div class="char-counter">
+                {{ newCommentContent().length }} / 5000
+            </div>
+            <button class="btn-send" (click)="submitComment()" [disabled]="!newCommentContent().trim()">
+                שלח תגובה
+            </button>
+        </div>
+
+        <!-- רשימת תגובות -->
+        <div class="comments-list">
+            <div class="comment-item" *ngFor="let comment of comments()">
+                <div class="avatar-placeholder">{{ comment?.author?.charAt(0) || '?' }}</div>
+                <div class="comment-content">
+                    <div class="comment-meta">
+                        <strong>{{ comment.author }}</strong>
+                        <span class="date">{{ comment.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                    <p>{{ comment.content }}</p>
+                    <button *ngIf="comment.is_owner || r.is_admin" class="btn-delete-comment"
+                        (click)="deleteComment(comment.id)">מחק</button>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoadingComments() && comments().length === 0" class="empty-comments">
+                <p>אין עדיין תגובות. היה הראשון לנסות!</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- לוח טעינה -->
+<div *ngIf="isLoading()" class="loader-container">
+    <div class="spinner"></div>
+</div>
+</div>

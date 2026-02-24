@@ -1,0 +1,136 @@
+.add-recipe-container {
+    background: #fffdf6;
+    padding: 30px 40px;
+    border-radius: 20px;
+    max-width: 800px;
+    margin: 40px auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    direction: rtl;
+}
+
+.add-recipe-container h2 {
+    text-align: center;
+    color: #E65100;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    text-align: right;
+}
+
+.form-control,
+.form-control-file,
+select,
+textarea {
+    border-radius: 10px;
+    border: 1px solid #eee6dc;
+    padding: 10px;
+    transition: border 0.3s;
+    direction: rtl;
+    text-align: right;
+}
+
+.form-control:focus,
+select:focus {
+    border-color: #E65100;
+    outline: none;
+    box-shadow: 0 0 8px rgba(230, 81, 0, 0.15);
+}
+
+.text-danger {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+/* ✨ תצוגה מקדימה של תמונה */
+.image-preview-container {
+    background: #fff;
+    border: 2px dashed #eee6dc;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+}
+
+.image-preview-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto;
+}
+
+.remove-image-btn {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    padding: 5px 15px;
+}
+
+/* כפתורים */
+.btn-success {
+    background: linear-gradient(135deg, #E65100, #FF8A50);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    transition: all 0.3s;
+    display: block;
+    margin: 20px auto 0;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(230, 81, 0, 0.3);
+}
+
+/* קלטים של רכיבים */
+.input-group {
+    direction: ltr;
+}
+
+.input-group .form-control {
+    direction: rtl;
+    text-align: right;
+}
+
+.input-group-text {
+    background: #fff3e0;
+    border: 1px solid #eee6dc;
+}
+
+.btn-outline-danger {
+    color: #E65100;
+    border-color: #E65100;
+}
+
+.btn-outline-danger:hover {
+    background: #E65100;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(230, 81, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .add-recipe-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+    
+    .image-preview {
+        max-height: 200px;
+    }
+}

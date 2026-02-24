@@ -1,0 +1,46 @@
+<!-- src/app/components/ingredient-searcher-component/ingredient-searcher-component.html -->
+
+<div class="search-wrapper">
+    <h2 class="search-title">{{ titleText }}</h2>
+
+    <!-- שדה הקלט עם Autocomplete -->
+    <div class="input-group">
+        <div class="autocomplete-container">
+            <input type="text" [(ngModel)]="currentIngredient" (input)="onInputChange()" (keyup.enter)="addIngredient()"
+                (blur)="closeSuggestions()" placeholder="לדוגמה: עגבניות, קמח, ביצים..." autocomplete="off" />
+
+            <!-- רשימת הצעות נפתחת -->
+            <div class="suggestions-dropdown" *ngIf="showSuggestions">
+                <div class="suggestion-item" *ngFor="let suggestion of filteredSuggestions"
+                    (mousedown)="selectSuggestion(suggestion.name)">
+                    <span [innerHTML]="highlightMatch(suggestion.name)"></span>
+                    <span class="suggestion-count">({{ suggestion.count }})</span>
+                </div>
+            </div>
+
+            <!-- הודעת טעינה -->
+            <div class="suggestions-dropdown loading" *ngIf="isLoading && currentIngredient.length >= 2">
+                <div class="suggestion-item">
+                    <span>טוען רכיבים...</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-add" (click)="addIngredient()" type="button">
+            <span style="font-size: 24px; line-height: 1;">+</span>
+        </button>
+    </div>
+
+    <!-- תגיות הרכיבים שנבחרו -->
+    <div class="tags-container">
+        <span *ngFor="let ing of ingredients; let i = index" class="ingredient-tag">
+            {{ ing }}
+            <button (click)="removeIngredient(i)" type="button">×</button>
+        </span>
+    </div>
+
+    <!-- כפתור חיפוש -->
+    <button class="btn-search-main" (click)="triggerSearch()" type="button">
+        מצא לי מתכון 🍲
+    </button>
+</div>

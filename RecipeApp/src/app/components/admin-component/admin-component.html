@@ -1,0 +1,76 @@
+<div class="admin-wrapper">
+  
+  <div class="header-section">
+    <h2>ניהול בקשות משתמשי תוכן</h2>
+    <p class="subtitle">ישנן {{ pendingUsers.length }} בקשות הממתינות לאישור שלך</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert-box error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="pendingUsers.length === 0" class="empty-state">
+    <div class="empty-icon">✓</div>
+    <h3>הכל מעודכן!</h3>
+    <p>אין כרגע בקשות חדשות לאישור.</p>
+  </div>
+
+  <div class="requests-list">
+    @for(user of pendingUsers; track $index) {
+      <div *ngIf="user.is_approved_uploader != false" 
+           class="request-card" 
+           [class.expanded]="expandedUserId === user?.id">
+        
+        <div class="card-header-row" (click)="toggleExpand(user.id)">
+          <div class="user-info-summary">
+            <div class="avatar-placeholder">
+              {{ user.username.charAt(0) }}
+            </div>
+            <div class="text-data">
+              <span class="username">{{ user.username }}</span>
+              <span class="email">{{ user.email }}</span>
+            </div>
+          </div>
+          
+          <button class="expand-btn">
+            <span class="arrow-icon">{{ expandedUserId === user.id ? '▲' : '▼' }}</span>
+          </button>
+        </div>
+
+        <div class="card-details" *ngIf="expandedUserId === user.id">
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="label">שם מלא:</span>
+              <span class="value">{{ user.username }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">אימייל:</span>
+              <span class="value">{{ user.email }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">תפקיד נוכחי:</span>
+              <span class="value">{{ user.role }}</span>
+            </div>
+            <div class="detail-item" *ngIf="user.phone">
+              <span class="label">טלפון:</span>
+              <span class="value">{{ user.phone }}</span>
+            </div>
+            <div class="detail-item full-width" *ngIf="user.address">
+              <span class="label">כתובת:</span>
+              <span class="value">{{ user.address }}</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn-action approve" (click)="approveUser(user.id); $event.stopPropagation()">
+              ✔ אישור בקשה
+            </button>
+            <button class="btn-action reject" (click)="rejectUser(user.id); $event.stopPropagation()">
+              ✕ דחייה
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

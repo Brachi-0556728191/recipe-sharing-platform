@@ -1,0 +1,327 @@
+:host {
+    display: block;
+    direction: rtl;
+    background-color: #fcfcfc;
+    /* רקע בהיר כמעט לבן */
+    min-height: 100vh;
+    padding-bottom: 50px;
+
+    /* משתנים מהמותג שלך */
+    --primary-color: #E65100;
+    /* כתום עמוק (ראשי) */
+    --primary-hover: #EF6C00;
+    --secondary-color: #43A047;
+    /* ירוק (צבע משני) */
+    --accent-color: #FF7043;
+    /* כתום ביניים/בהיר יותר */
+    --deep-orange: #d84315;
+    /* כתום כהה/אדמדם לתגים */
+    --text-dark: #333;
+}
+
+.profile-container {
+    padding-top: 40px;
+}
+
+/* --- כותרת כללית --- */
+.section-header h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* הסרת ה-divider כיוון שלא קיים ב-HTML החדש */
+/* .divider {...} */
+
+.text-primary-custom {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* --- כרטיס פרופיל --- */
+.profile-card {
+    margin-top: 120px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    /* הוספת קו הפרדה עדין */
+    transition: transform 0.3s ease;
+
+    /* הופך את האלמנט לדביק */
+    position: sticky;
+    
+    /* המרחק מהקצה העליון של המסך שבו הוא ייעצר */
+    top: 200px; 
+    
+    /* מבטיח שהכרטיסייה תהיה מעל אלמנטים אחרים אם יש חפיפה */
+    /* z-index: 10; */
+    
+    /* אופציונלי: מוודא שהגובה לא יחרוג מגובה המסך כדי שלא יחתך */
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    background-color: var(--accent-color);
+    /* שינוי לאווטאר בגוון כתום בהיר יותר */
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-list p {
+    font-size: 1rem;
+    color: var(--text-dark);
+    line-height: 1.8;
+}
+
+.info-list i {
+    color: var(--primary-color);
+    /* שינוי האייקונים לכתום הראשי */
+    margin-left: 10px;
+}
+
+.btn-request-role {
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.btn-request-role:hover:not(:disabled) {
+    background-color: #388E3C;
+}
+
+.btn-request-role:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* כפתור Outline - מעוצב מחדש */
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-width: 2px;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* כפתור ראשי - מעוצב מחדש */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(230, 81, 0, 0.3) !important;
+}
+
+/* ========================================= */
+/* --- גריד רשימת מתכונים (עיצוב גלריה) --- */
+/* ========================================= */
+
+.recipe-list-header h3 {
+    color: var(--accent-color);
+    /* שימוש בצבע כתום בהיר יותר לכותרת הפנימית */
+    font-weight: 800;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+    margin-bottom: 0 !important;
+}
+
+.recipe-list-grid {
+    display: grid;
+    /* 2 כרטיסים בשורה בד"כ, נשמרת רספונסיביות */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.recipe-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    overflow: hidden;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* --- עטיפת תמונה --- */
+.card-image-wrapper {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.recipe-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.badges-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.meta-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    margin-right: 5px;
+}
+
+.category-badge {
+    background-color: var(--deep-orange);
+    /* שינוי לצבע כתום-אדמדם כהה יותר, לשבירת הכתום הראשי */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* --- תוכן הכרטיס --- */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    /* -webkit-line-clamp: 2; */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- כפתורים ומידע תחתון --- */
+.content-bottom {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meta-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.rating-number {
+    color: #ffc107;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.kashrut-tag,
+.time-tag {
+    background-color: #f5f5f5;
+    color: #666;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+
+/* --- כפתורי פעולה --- */
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background-color: #f5f5f5;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-delete {
+    background: #FFEBEE;
+    color: #D32F2F;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.btn-delete:hover {
+    background: #FFCDD2;
+}
+
+/* --- רספונסיביות --- */
+@media (max-width: 991px) {
+    .profile-container .row {
+        flex-direction: column;
+    }
+
+    .recipe-list-grid {
+        grid-template-columns: 1fr;
+    }
+}

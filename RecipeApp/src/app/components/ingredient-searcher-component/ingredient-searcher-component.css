@@ -1,0 +1,221 @@
+/* src/app/components/ingredient-searcher-component/ingredient-searcher-component.css */
+
+/* ===========================
+   כללי - מכולה ראשית
+   =========================== */
+.search-wrapper {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  direction: rtl;
+}
+
+.search-title {
+  color: white;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+}
+
+/* ===========================
+   שדה הקלט + כפתור +
+   =========================== */
+.input-group {
+  /* display: flex;
+  gap: 10;
+  margin-bottom: 15px;
+  position: relative; */
+  display: flex;
+  gap: 0; 
+  align-items: center; /* מוודא שהם באותו גובה */
+}
+
+/* מכולה ל-Autocomplete */
+.autocomplete-container {
+  flex: 1;
+  position: relative;
+}
+
+.autocomplete-container input {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  /* border-radius: 50px 0 0 50px; */
+  /* סדר הרדיוס: למעלה-שמאל | למעלה-ימין | למטה-ימין | למטה-שמאל */
+  /* אנחנו רוצים: ימין עגול, שמאל ישר */
+  border-radius: 0 50px 50px 0 !important; 
+  
+  /* תיקון קוסמטי: שלא יעלה על הכפתור */
+  border-left: none; 
+  z-index: 1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: box-shadow 0.3s;
+
+}
+
+.autocomplete-container input:focus {
+  box-shadow: 0 6px 15px rgba(67, 160, 71, 0.3);
+}
+
+/* כפתור הוספה (+) */
+.btn-add {
+  background: #43A047;
+  color: white;
+  border: none;
+  width: 50px;
+  height: 58px;
+  border-radius: 50px 0 0 50px !important;
+  
+  cursor: pointer;
+  font-size: 1.2rem;
+  box-shadow: 10px 14px 20px rgba(67, 160, 71, 0.3);
+  transition: all 0.3s;
+  flex-shrink: 0;
+  margin-right: 10px;
+
+  
+}
+
+.btn-add:hover {
+  background: #388E3C;
+  transform: scale(1.05);
+}
+
+/* ===========================
+   רשימת הצעות נפתחת
+   =========================== */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  margin-top: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+  direction: rtl;
+}
+
+/* פריט בודד ברשימה */
+.suggestion-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: #FFF8E1;
+}
+
+/* הדגשת טקסט החיפוש */
+.suggestion-item strong {
+  color: #E65100;
+  font-weight: 700;
+}
+
+/* מספר ההופעות */
+.suggestion-count {
+  font-size: 0.85rem;
+  color: #999;
+  margin-right: 10px;
+}
+
+/* הודעת טעינה */
+.suggestions-dropdown.loading {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/* ===========================
+   תגיות רכיבים שנבחרו
+   =========================== */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+  min-height: 30px;
+}
+
+.ingredient-tag {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.ingredient-tag button {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+
+.ingredient-tag button:hover {
+  transform: scale(1.2);
+}
+
+/* ===========================
+   כפתור חיפוש
+   =========================== */
+.btn-search-main {
+  background: #E65100;
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(230, 81, 0, 0.4);
+}
+
+.btn-search-main:hover {
+  transform: scale(1.05);
+  background: #EF6C00;
+  box-shadow: 0 6px 20px rgba(230, 81, 0, 0.5);
+}
+
+/* ===========================
+   Scrollbar מותאם (אופציונלי)
+   =========================== */
+.suggestions-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestions-dropdown::-webkit-scrollbar-thumb {
+  background: #E65100;
+  border-radius: 3px;
+}
+
+.suggestions-dropdown::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}

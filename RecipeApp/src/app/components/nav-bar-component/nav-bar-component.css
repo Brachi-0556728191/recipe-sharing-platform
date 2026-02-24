@@ -1,0 +1,154 @@
+/* nav-bar-component.css - תיקון סופי ומדויק לניגודיות במצב Active */
+
+/* משתני צבעים ראשיים */
+:root {
+    --primary-color: #E65100; /* כתום עמוק (הצבע הראשי שלך) */
+    --accent-color: #FFCC80; /* כתום בהיר יותר */
+    --text-color: #333; /* טקסט ראשי כהה */
+    --hover-bg: rgba(230, 81, 0, 0.1); /* 10% שקיפות מהכתום הראשי - הרקע הבהיר */
+    --subtle-text: #555;
+}
+
+:host {
+    direction: rtl;
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    width: 100%;
+}
+
+/* 1. רקע לבן וצל */
+.navbar {
+    background-color: white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: 70px;
+}
+
+/* 2. לוגו */
+.navbar-brand {
+    text-decoration: none;
+    color: var(--primary-color) !important;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand i {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+}
+
+/* 3. עיצוב הקישורים הראשיים (nav-link) */
+.nav-link {
+    color: var(--subtle-text) !important; 
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 8px 15px !important;
+    border-radius: 20px;
+}
+
+/* מצב Hover / Focus */
+.nav-link:hover,
+.nav-link:focus {
+    background-color: var(--hover-bg) !important;
+    color: var(--primary-color) !important;
+    box-shadow: 0 0 5px rgba(230, 81, 0, 0.2);
+}
+
+/* 🛑 תיקון: מצב Active (נבחר) - רקע בהיר, טקסט בצבע הראשי */
+.nav-link.active {
+    background-color: var(--hover-bg) !important;
+    color: var(--primary-color) !important;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.nav-link.admin {
+    color: #007bff !important;
+    font-weight: bold;
+}
+
+/* 4. שבב משתמש (User Chip) */
+.user-chip {
+    color: var(--text-color);
+    font-size: 1rem;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* 5. כפתורי פעולה */
+
+/* כפתור הרשמה (Outline) */
+.btn-outline-danger {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    font-weight: bold;
+    transition: all 0.2s ease; 
+}
+.btn-outline-danger:hover {
+    background-color: var(--primary-color) !important;
+    color: #FFCC80 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* כפתור יציאה (Outline) */
+.btn-logout-custom {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.btn-logout-custom:hover {
+    background-color: var(--primary-color) !important;
+    color: #FFCC80 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* כפתור כניסה (Outline) */
+.btn-login-custom {
+    color: var(--text-color) !important;
+    border-color: var(--text-color) !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.btn-login-custom:hover {
+    background-color: var(--text-color) !important;
+    color: #FFCC80 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 6. רספונסיביות (מובייל) */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: white;
+        border-top: 1px solid #eee;
+    }
+    .navbar-nav {
+        margin-right: 0 !important;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .user-chip {
+        align-self: center;
+        margin-right: 0 !important;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+    
+    .nav-link:hover, .nav-link:focus, .nav-link.active {
+        background-color: var(--hover-bg) !important;
+        color: var(--primary-color) !important;
+    }
+}

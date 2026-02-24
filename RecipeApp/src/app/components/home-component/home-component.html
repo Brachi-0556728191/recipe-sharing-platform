@@ -1,0 +1,82 @@
+<div class="hero-section">
+  <div class="hero-overlay">
+<!-- טעינת קומפוננטת חיפוש רכיבים -->
+    <app-ingredient-searcher-component [titleText]="'מה נבשל היום? ספרו לנו מה יש בבית!'"
+      (search)="handleIngredientSearch($event)">
+    </app-ingredient-searcher-component>
+  </div>
+</div>
+
+<div class="categories-section">
+  <h3>?מה מתחשק לכם לאכול</h3>
+  <div class="categories-grid">
+    <div class="category-item" *ngFor="let cat of categories" (click)="filterByCategory(cat.id)">
+      <div class="cat-icon">{{ cat.icon }}</div>
+      <span class="cat-name">{{ cat.name }}</span>
+    </div>
+  </div>
+</div>
+
+<section class="info-section">
+  <div class="info-container">
+    <h2>✨?"MealMate" - למה לבחור ב</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h4>🪄 קסם במטבח</h4>
+        <p>האלגוריתם שלנו הופך את "אין לי מה לאכול" לארוחת גורמה ממה שיש לכם במזווה</p>
+      </div>
+      <div class="feature-card">
+        <h4>🤝 קהילה משתפת</h4>
+        <p>מתכונים אמיתיים מאנשים אמיתיים. שתפו את ההצלחות שלכם וקבלו השראה מאחרים</p>
+      </div>
+      <div class="feature-card">
+        <h4>🚀 חיסכון בזמן</h4>
+        <p>בלי לרוץ לסופר. מוצאים מתכון שמתאים בול למה שכבר קניתם</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="faq-section">
+  <h2>שאלות ותשובות</h2>
+  <div class="faq-container">
+    <details>
+      <summary>?עולה כסף MealMate - האם השימוש ב</summary>
+      <p>ממש לא! השירות כולו ניתן בחינם, אנו קהילה של אוהבי בישול שרוצים לחלוק ידע.</p>
+    </details>
+    <details>
+      <summary>?איך אני יכול/ה להעלות מתכונים משלי</summary>
+      <p>לאחר ההרשמה, יש להגיש בקשה להיות "משתמש תוכן" דרך האזור האישי. מנהל האתר יאשר את הבקשה לאחר בדיקה קצרה, ואז
+        תוכלו לשתף את המתכונים שלכם!</p>
+    </details>
+    <details>
+      <summary>?איך עובד ה"חיפוש לפי רכיבים"</summary>
+      <p>אתם מזינים את המצרכים שיש לכם כרגע בבית (למשל: קמח, ביצים, עגבניות), והמערכת שלנו מציגה לכם מתכונים שיש בהם את
+        מרבית הרכיבים שהזנתם, עם ציון התאמה באחוזים!</p>
+    </details>
+    <details>
+      <summary>?מה קורה אם חסר לי רכיב אחד</summary>
+      <p>אין בעיה! האלגוריתם שלנו יציג לכם את המתכון בכל זאת, אך ציון ההתאמה שלו יהיה נמוך יותר. אנו מציגים בדיוק אילו
+        רכיבים חסרים כדי שתוכלו להחליט אם לצאת לקנות או להשתמש בתחליף.</p>
+    </details>
+    <details>
+      <summary>?האם המתכונים מדורגים</summary>
+      <p>כן, כל המתכונים באתר מדורגים על ידי הקהילה! הדירוג הממוצע מוצג על גבי כל מתכון, ואתם מוזמנים לדרג ולשתף את
+        דעתכם.</p>
+    </details>
+    <details>
+      <summary>?האם ניתן לדווח על מתכון שלא עבד לי</summary>
+      <p>במקום לדווח, אנו ממליצים להשאיר דירוג נמוך, זה עוזר לקהילה להבין מהן הבעיות הפוטנציאליות.</p>
+    </details>
+  </div>
+</section>
+
+
+<div class="cta-section">
+  <h2>?מוכנים להתחיל לבשל</h2>
+  <div class="cta-buttons">
+    <button (click)="goRecipesPage()" class="btn primary">לכל המתכונים</button>
+    <a [routerLink]="['/register']" class="btn secondary">הצטרפו לקהילה</a>
+  </div>
+</div>

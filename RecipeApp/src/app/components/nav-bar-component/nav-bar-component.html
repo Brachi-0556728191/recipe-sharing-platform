@@ -1,0 +1,63 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" [routerLink]="['/home']" (click)="isMenuOpen.set(false)">
+        <i class="fas fa-kitchen-set me-2"></i>
+        <span>{{ appName }}</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" (click)="toggleMenu()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" [class.show]="isMenuOpen()">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" (click)="isMenuOpen.set(false)">
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/home']" routerLinkActive="active">דף הבית</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/recipes']" routerLinkActive="active">גלריית מתכונים</a>
+          </li>
+
+          <li class="nav-item" *ngIf="hasMinRole(ROLE_UPLOADER)">
+            <a class="nav-link accent" [routerLink]="['/addRecipe']" routerLinkActive="active">הוסף מתכון</a>
+          </li>
+
+          <li class="nav-item" *ngIf="currentUser">
+            <a class="nav-link" [routerLink]="['/profile']" routerLinkActive="active">אזור אישי</a>
+          </li>
+
+          <li class="nav-item" *ngIf="hasMinRole(ROLE_ADMIN)">
+            <a class="nav-link admin" [routerLink]="['/admin']" routerLinkActive="active">⚙ ניהול</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center" (click)="isMenuOpen.set(false)">
+          <ng-container *ngIf="currentUser">
+            <li class="nav-item user-chip me-4">
+              הי,  {{ currentUser.username }}
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-danger btn-logout-custom" (click)="logout()">
+                <i class="fas fa-sign-out-alt ms-2"></i>יציאה
+              </button>
+            </li>
+          </ng-container>
+
+          <ng-container *ngIf="!currentUser">
+            <li class="nav-item me-2">
+              <a class="btn btn-outline-secondary btn-login-custom" [routerLink]="['/login']" routerLinkActive="active">
+                <i class="fas fa-sign-in-alt ms-2"></i>התחברות
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-danger btn-register-custom" [routerLink]="['/register']" routerLinkActive="active">
+                הרשמה
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+        </div>
+    </div>
+  </nav>
+</header>

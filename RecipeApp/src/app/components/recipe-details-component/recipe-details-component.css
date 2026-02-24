@@ -1,0 +1,619 @@
+:host {
+    /* משתנים בהתאם לקומפוננטת הגלריה שלך */
+    --primary: #E65100;
+    --primary-light: #FF9800;
+    --secondary: #43A047;
+    --bg-creme: #FFF8E1;
+    --text-dark: #2c3e50;
+    --gray-light: #f5f5f5;
+    --radius: 16px;
+    
+    display: block;
+    background: #f9f9f9;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    direction: rtl;
+}
+
+.page-container {
+    max-width: 1200px; /* רוחב סטנדרטי לאתרי תוכן */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.top-bar {
+    margin-bottom: 20px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-back:hover {
+    color: var(--primary);
+    transform: translateX(5px); /* תזוזה קטנה לאפקט */
+}
+
+/* --- Card Styles --- */
+.recipe-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* --- Product Hero (Top Section) --- */
+.product-hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr; /* חלוקה: 55% תמונות, 45% טקסט */
+    gap: 40px;
+    padding: 40px;
+}
+
+/* Gallery Layout */
+.media-gallery {
+    display: flex;
+    gap: 15px;
+    height: 450px; /* גובה קבוע לגלריה */
+}
+
+.thumbnails-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 80px;
+    overflow-y: auto;
+    scrollbar-width: none; /* הסתרת פס גלילה */
+}
+
+.thumb-item {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.thumb-item.active, .thumb-item:hover {
+    border-color: var(--primary);
+    opacity: 1;
+}
+
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main-image-container {
+    flex: 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    background: #eee;
+}
+
+.main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badges-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: black;
+}
+
+.badge {
+    background: rgba(255,255,255,0.95);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.badge.kashrut { color: var(--secondary); }
+.badge.time { color: var(--text-dark); }
+
+/* Intro Content */
+.recipe-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.category-tag {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.recipe-title {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin: 0 0 15px 0;
+    line-height: 1.2;
+}
+
+.meta-row {
+    display: flex;
+    gap: 20px;
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.rating-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    background: var(--bg-creme);
+    padding: 10px 15px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.big-stars {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.big-stars .star.filled {
+    color: #FFC107;
+}
+
+.big-stars .star:hover {
+    transform: scale(1.1);
+}
+
+.description {
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-primary, .btn-outline {
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(230, 81, 0, 0.3);
+}
+
+.btn-primary:hover { background: #D84315; transform: translateY(-2px); }
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-dark);
+    border: 2px solid #ddd;
+}
+
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+.divider { border: 0; height: 1px; background: #eee; margin: 0; }
+
+/* --- Recipe Body --- */
+.recipe-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* מצרכים 1/3, הוראות 2/3 */
+    gap: 50px;
+    padding: 50px 40px;
+}
+
+/* Ingredients */
+.ingredients-section {
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: var(--radius);
+    border: 1px solid #eee;
+    height: fit-content;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 10px;
+}
+
+.section-header h3 { margin: 0; color: var(--text-dark); }
+.servings { color: #888; font-size: 0.9rem; }
+
+.checklist {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Checkbox Styling */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    user-select: none;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.checkbox-container:hover { background: #f0f0f0; }
+
+.checkbox-container input { display: none; }
+
+.checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+    margin-left: 10px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.checkbox-container input:checked ~ .checkmark { background-color: var(--secondary); }
+.checkbox-container input:checked ~ .ing-text { text-decoration: line-through; color: #999; }
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkmark:after { display: block; }
+
+/* Instructions */
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.step-item {
+    display: flex;
+    gap: 20px;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 5px; /* יישור אופטי לשורה הראשונה */
+}
+
+.step-content p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    color: #333;
+}
+
+/* --- Comments Section (Full Width) --- */
+.comments-full-width {
+    background: #f4f4f4;
+    padding: 40px;
+    border-top: 1px solid #eee;
+}
+
+.comments-header {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.comments-count {
+    background: #ddd;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.add-comment-box {
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.add-comment-box textarea {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.btn-send {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    float: left; /* יישור כפתור לצד שמאל */
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 15px;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #555;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-meta {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-meta .date { color: #999; font-size: 0.8rem; }
+
+.btn-delete-comment {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .product-hero {
+        grid-template-columns: 1fr; /* תמונות מעל טקסט */
+    }
+    
+    .recipe-body-grid {
+        grid-template-columns: 1fr; /* עמודה אחת */
+    }
+    
+    .media-gallery {
+        flex-direction: column-reverse; /* במובייל, תמונות קטנות מתחת לגדולה */
+        height: auto;
+    }
+    
+    .thumbnails-col {
+        flex-direction: row;
+        width: 100%;
+        height: 80px;
+    }
+}
+
+#ingredients,
+#instructions {
+    scroll-margin-top: 100px; 
+}
+
+.print-actions {
+  display: flex;
+  gap: 12px;
+}
+
+
+
+.print-btn .icon {
+  font-size: 1.2rem;
+}
+
+.print-btn.recipe {
+  background: #FFF3E0;
+  color: var(--primary);
+}
+
+.print-btn.recipe:hover {
+  background: #FFE0B2;
+  transform: translateY(-1px);
+}
+
+.print-btn.shopping {
+  background: #E8F5E9;
+  color: var(--secondary);
+}
+
+.print-btn.shopping:hover {
+  background: #C8E6C9;
+  transform: translateY(-1px);
+}
+.ingredients-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.print-actions.compact {
+  display: flex;
+  gap: 10px;
+}
+
+.print-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.print-btn span {
+  font-weight: 500;
+}
+
+
+.print-btn.recipe {
+  background: #FFF3E0;
+}
+
+.print-btn.shopping {
+  background: #E8F5E9;
+}
+
+.print-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+}
+.ingredients-hint {
+  font-size: 0.85rem;
+  color: #666;
+  background: #FFFDE7;
+  padding: 8px 12px;
+  margin-right: 50px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+    width: 50%;
+
+}
+/* ===== Ingredients header fix ===== */
+.ingredients-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ingredients-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  white-space: nowrap;
+}
+
+/* מונע מהכפתורים לדחוף טקסט */
+.print-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* כפתורים קטנים, מאוזנים */
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 30px;
+  padding: 0 10px;
+
+  font-size: 0.75rem;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.print-btn span {
+  font-weight: 500;
+}
+
+/* צבעים – נשארים כמו אצלך */
+.print-btn.recipe {
+  background: #FFF3E0;
+  color: var(--primary);
+}
+
+.print-btn.shopping {
+  background: #E8F5E9;
+  color: var(--secondary);
+}
+
+.print-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+}

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+*.db
+
+# Angular
+node_modules/
+/dist/
+/.angular/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+*.mp4

@@ -1,0 +1,104 @@
+<div class="signin-wrapper">
+  <div class="auth-form-container">
+    <h2>כניסה למערכת</h2>
+
+    <div *ngIf="errorMessage" class="global-error">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" autocomplete="off">
+      
+      <div class="field-wrapper">
+        <input type="text" 
+               id="username" 
+               name="username" 
+               [(ngModel)]="credentials.username"
+               required
+               #usernameField="ngModel"
+               pattern="([A-Zא-ת][a-zA-Zא-ת\s]*)\s+([A-Zא-ת][a-zA-Zא-ת\s]*)"
+               placeholder=" " 
+               (focus)="serverErrors().username = ''" 
+               [class.input-error]="serverErrors().username || (usernameField.invalid && usernameField.touched)"
+               autofocus="true">
+               <label for="username">שם משתמש מלא</label>
+
+        <div *ngIf="usernameField.invalid && usernameField.touched" class="field-error-msg">
+          <span *ngIf="usernameField.errors?.['required']">חובה להזין שם משתמש</span>
+          <span *ngIf="usernameField.errors?.['pattern']">יש להזין שם פרטי ומשפחה (אות גדולה בהתחלה)</span>
+        </div>
+        <div *ngIf="serverErrors().username" class="field-error-msg">
+          {{ serverErrors().username }}
+        </div>
+      </div>
+
+       <div class="field-wrapper">
+        <input type="email"
+               id="email"
+               name="email"
+               [(ngModel)]="credentials.email"
+               required
+               email
+               #emailField="ngModel"
+               placeholder=" "
+               list="emailSuggestionsList" 
+               (input)="onEmailInput($event)"
+               (focus)="serverErrors().email = ''" 
+               [class.input-error]="serverErrors().email || (emailField.invalid && emailField.touched)">
+               
+        <label for="email">כתובת אימייל</label>
+
+        <datalist id="emailSuggestionsList">
+            <option *ngFor="let email of suggestedEmails" [value]="email"></option>
+        </datalist>
+
+        <div *ngIf="emailField.invalid && emailField.touched" class="field-error-msg">
+          <span *ngIf="emailField.errors?.['required']">שדה חובה</span>
+          <span *ngIf="emailField.errors?.['email']">כתובת לא תקינה</span>
+        </div>
+        
+        <div *ngIf="serverErrors().email" class="field-error-msg">
+          {{ serverErrors().email }}
+        </div>
+      </div>
+
+     <div class="field-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" 
+               id="password" 
+               name="password" 
+               [(ngModel)]="credentials.password"
+               required
+               #passwordField="ngModel"
+               minlength="6"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}" 
+               placeholder=" "
+               (focus)="serverErrors().password = ''"
+               [class.input-error]="serverErrors().password || (passwordField.invalid && passwordField.touched)">
+        
+        <label for="password">סיסמה</label>
+
+        <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+          <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          
+          <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"></path><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path></svg>
+        </button>
+
+        <div *ngIf="passwordField.invalid && passwordField.touched" class="field-error-msg">
+          <span *ngIf="passwordField.errors?.['required']">חובה להזין סיסמה</span>
+          <span *ngIf="passwordField.errors?.['minlength']">מינימום 6 תווים</span>
+          <span *ngIf="passwordField.errors?.['pattern'] && passwordField.errors?.['minlength']">,  </span>
+          <span *ngIf="passwordField.errors?.['pattern']">נדרש: אות גדולה, קטנה, מספר ותו מיוחד</span>
+
+        </div>
+        <div *ngIf="serverErrors().password" class="field-error-msg">
+          {{ serverErrors().password }}
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid">התחברות</button>
+      
+      <a [routerLink]="['/register']" class="signup-link">
+        עדיין לא חבר בקהילה? <strong>הצטרף עכשיו</strong>
+      </a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,601 @@
+:host {
+    /* שימוש במשתנים הגלובליים שלך */
+    --primary: #E65100;
+    --primary-light: #FF9800;
+    --secondary: #43A047;
+    --bg-creme: #FFF8E1;
+    --text-dark: #2c3e50;
+    --text-gray: #666;
+    --card-radius: 16px;
+    --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+    --shadow-md: 0 10px 20px rgba(0,0,0,0.08);
+    
+    display: block;
+    direction: rtl;
+    background-color: #f9f9f9; /* רקע כללי עדין יותר לדף */
+    min-height: 100vh;
+}
+
+.gallery-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    gap: 30px;
+    position: relative;
+}
+
+/* ===========================
+   Sidebar Styles
+   =========================== */
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    /* הופך את הסיידבר לדביק */
+    position: sticky;
+    top: 20px;
+    
+    /* הגובה המקסימלי הוא גובה המסך פחות מרווח עליון ותחתון */
+    
+    /* מאפשר גלילה פנימית אם התוכן ארוך מדי */
+    overflow-y: auto;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-card {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+}
+
+.filter-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.filter-header {
+    background: var(--bg-creme);
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.filter-header h2, .filter-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.filter-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Form Elements inside Sidebar */
+.filter-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.select-wrapper select:focus {
+    border-color: var(--primary);
+}
+
+.range-slider {
+    width: 100%;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 5px 0;
+}
+
+/* Ingredients Specifics */
+.ingredients-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center; /* מירכוז הרכיבים */
+}
+
+.ingredient-input-item {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 20px;
+    padding: 2px 8px;
+    transition: all 0.2s;
+}
+
+.ingredient-input-item:focus-within {
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--secondary);
+}
+
+.ingredient-input-item input {
+    border: none;
+    background: transparent;
+    width: 80px; /* רוחב קטן כדי שייכנסו כמה בשורה */
+    padding: 6px;
+    font-size: 0.85rem;
+    outline: none;
+    text-align: center;
+}
+
+.filter-body {
+    padding: 10px; /* הוקטן מ-20 */
+    gap: 10px;     /* הוקטן מ-15 */
+}
+
+.filter-group label {
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+}
+
+.select-wrapper select {
+    padding: 8px; /* הוקטן מ-10 */
+}
+
+/* הקטנת כרטיס הרכיבים */
+.ingredients-wrapper {
+    gap: 6px;
+}
+
+.ingredient-input-item input {
+    width: 70px;
+    padding: 4px;
+}
+
+.btn-remove-ing {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 4px;
+}
+
+.btn-remove-ing:hover {
+    color: red;
+}
+
+.ing-actions {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-text {
+    background: none;
+    border: 1px dashed #ccc;
+    color: #666;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-text:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.btn-search-full {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(67, 160, 71, 0.3);
+    transition: transform 0.2s;
+}
+
+.btn-search-full:hover {
+    transform: translateY(-2px);
+    background: #388E3C;
+}
+
+/* ===========================
+   Main Gallery Styles
+   =========================== */
+.main-gallery {
+    flex: 1;
+}
+
+.gallery-header {
+    margin-bottom: 30px;
+}
+
+.gallery-header h1 {
+    color: var(--text-dark);
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.gallery-header .subtitle {
+    color: var(--text-gray);
+    font-size: 1.1rem;
+}
+
+/* GRID LAYOUT - 3 items per row */
+.recipe-grid {
+    display: grid;
+    /* הגדרת גריד: חוזר על עמודות בגודל שווה, אבל מינימום 260 פיקסל */
+    /* בקשה ספציפית: 3 בשורה */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 25px;
+    padding-bottom: 40px;
+}
+
+/* Recipe Card Styling */
+.recipe-card {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* גובה מחושב כדי שייכנסו בערך 2 שורות במסך סטנדרטי */
+    height: 420px; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+}
+
+.recipe-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* Image Area */
+.card-image-container {
+    height: 200px; /* כמעט 50% מהכרטיס */
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.recipe-card:hover .card-image-container img {
+    transform: scale(1.05);
+}
+
+.image-badges {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.badge {
+    background: rgba(255,255,255,0.95);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.badge.kashrut { color: var(--secondary); }
+.badge.time { color: var(--text-dark); }
+
+.match-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    padding: 20px 10px 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Content Area */
+.card-content {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.category-label {
+    font-size: 0.8rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-title {
+    margin: 5px 0 8px;
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    line-height: 1.3;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-title:hover {
+    color: var(--primary);
+}
+
+.card-desc {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+    /* קיצוץ טקסט אחרי 2 שורות */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+/* Actions & Rating */
+.content-bottom {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rating-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stars-display {
+    color: #ddd;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.star-icon.active {
+    color: #FFC107; /* צבע זהב לכוכבים */
+}
+
+.star-icon:hover {
+    transform: scale(1.2);
+}
+
+.rating-number {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-view {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 0;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-view:hover {
+    background: #D84315;
+}
+
+.btn-delete {
+    background: #FFEBEE;
+    color: #D32F2F;
+    border: none;
+    width: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete:hover {
+    background: #FFCDD2;
+}
+
+/* Loading & Empty States */
+.state-message {
+    text-align: center;
+    padding: 50px;
+    background: white;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===========================
+   Responsive Queries
+   =========================== */
+/* התאמה למסכים קטנים יותר, למרות הבקשה ל-3 בשורה */
+@media (max-width: 1100px) {
+    .recipe-grid {
+        grid-template-columns: repeat(2, 1fr); /* יורד ל-2 בשורה */
+    }
+}
+
+@media (max-width: 850px) {
+    .gallery-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static; /* ביטול הדביקות במובייל */
+        flex-direction: row; /* מסדר את המלבנים בשורה אחת במובייל */
+        flex-wrap: wrap;
+    }
+    
+    .filter-card {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .recipe-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+
+.reset-group {
+    margin-top: 10px;
+}
+
+.btn-reset-filters {
+    width: 100%;
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 10px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-reset-filters:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    
+    /* ✅ תיקון הגלילה */
+    max-height: calc(100vh - 40px); /* גובה המסך פחות מרווחים */
+    overflow-y: auto; /* מאפשר גלילה */
+    
+    /* ✅ הסתרת פס הגלילה (אבל שמירה על הפונקציונליות) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    /* ✅ הוספה: padding תחתון כדי שהתוכן לא ייחתך */
+    padding-bottom: 20px;
+}
+
+/* ✅ הסתרת פס הגלילה ב-Chrome/Safari */
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* ✅ תיקון: הקטנת גובה כרטיסי הפילטרים */
+.filter-card {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+    flex-shrink: 0; /* מונע כווץ */
+}
+
+.filter-body {
+    padding: 12px; /* הוקטן מ-20 */
+    gap: 10px;
+}
+
+/* ✅ הקטנת הרווחים */
+.filter-group label {
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+}
+
+.select-wrapper select {
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+/* ✅ הקטנת שדות הרכיבים */
+.ingredients-wrapper {
+    gap: 6px;
+    max-height: 150px; /* גובה מקסימלי */
+    overflow-y: auto; /* גלילה פנימית אם יש הרבה רכיבים */
+    padding: 5px;
+}
+
+.ingredient-input-item input {
+    width: 65px; /* עוד יותר קטן */
+    padding: 4px;
+    font-size: 0.8rem;
+}
+
+/* ✅ הקטנת כפתורים */
+.ing-actions {
+    margin-top: 8px;
+    gap: 8px;
+}
+
+.btn-text, .btn-search-full {
+    padding: 8px;
+    font-size: 0.85rem;
+}
+
+.btn-reset-filters {
+    padding: 8px;
+    font-size: 0.85rem;
+}

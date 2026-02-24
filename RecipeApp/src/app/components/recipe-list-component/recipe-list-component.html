@@ -1,0 +1,228 @@
+<div class="gallery-container">
+    <aside class="sidebar">
+        <div class="filter-card">
+            <div class="filter-header">
+                <h2>🔍 סינון ומיון</h2>
+            </div>
+            <div class="filter-body">
+                <div class="filter-group">
+                    <label>סדר תצוגה</label>
+                    <div class="select-wrapper">
+                        <select [(ngModel)]="sortOption" (change)="applyClientSort()">
+                            <option value="newest">מהחדש לישן 🚅</option>
+                            <option value="ratingDesc">הכי טעים (דירוג) ⭐</option>
+                            <option value="timeAsc">הכי מהיר ⚡</option>
+                            <option value="matchDesc">אחוז התאמה לרכיבים שחיפשת 🎯</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="filter-group">
+                    <label>כשרות</label>
+                    <div class="select-wrapper">
+                        <select [(ngModel)]="filters.kashrut" (change)="onFilterChange()">
+                            <option value="all">הכל</option>
+                            <option value="0">🥦 פרווה</option>
+                            <option value="1">🥛 חלבי</option>
+                            <option value="2">🥩 בשרי</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>קטגוריה</label>
+                    <div class="select-wrapper">
+                        <select [(ngModel)]="filters.category" (change)="onFilterChange()">
+                            <option value="all">כל הקטגוריות</option>
+                            <option value="0">🍖 מנות עיקריות</option>
+                            <option value="1">🍝 תוספות</option>
+                            <option value="2">🍰 קינוחים</option>
+                            <option value="3">🎂 עוגות</option>
+                            <option value="4">🍪 עוגיות</option>
+                            <option value="5">🥗 סלטים</option>
+                            <option value="6">🍲 מרקים</option>
+                            <option value="7">🥯 לחמים</option>
+                            <option value="8">🍨 גלידות</option>
+                            <option value="9">🥧 פשטידות</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>זמן הכנה מקסימלי: <strong>{{ filters.maxTime }} דק'</strong></label>
+                    <input type="range" min="10" max="240" step="10" [(ngModel)]="filters.maxTime"
+                        (change)="onFilterChange()" class="range-slider">
+                </div>
+
+                <div class="filter-group">
+                    <label>דירוג מינימלי: <strong>{{ filters.minRating }} ומעלה</strong></label>
+                    <input type="range" min="0" max="5" step="0.5" [(ngModel)]="filters.minRating"
+                        (change)="onFilterChange()" class="range-slider">
+                </div>
+
+                <div class="filter-group reset-group">
+                    <button class="btn-reset-filters" (click)="resetAll()">
+                        🔄 נקה סינונים
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="filter-card ingredients-card">
+            <div class="filter-header">
+                <h3>🥬 יש לי במקרר...</h3>
+            </div>
+            <div class="filter-body">
+                <div class="ingredients-wrapper">
+
+                    <div class="ingredient-input-item"
+                        *ngFor="let ing of ingredientInputs; let i = index; trackBy: trackByIndex">
+                        <input type="text" [value]="ingredientInputs[i]"
+                            (input)="updateIngredient(i, $any($event.target).value)" placeholder="לדוג': קמח" />
+                        <button type="button" class="btn-remove-ing" (click)="removeIngredientInput(i)"
+                            [disabled]="ingredientInputs.length === 1 && !ingredientInputs[0]">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+                <div class="ing-actions">
+                    <button type="button" class="btn-text" (click)="addIngredientInput()">+ הוסף את הרכיב {{ lastIngredientLabel }}</button>
+                    <button type="button" class="btn-search-full" (click)="searchByIngredients()">חפש מתכונים
+                        🔍</button>
+                </div>
+            </div>
+        </div> -->
+        <!-- 
+  ⚠️ זהו הקטע המעודכן של כרטיס הרכיבים!
+  החליפי את הקוד בין:
+  <div class="filter-card ingredients-card">
+  עד
+  </div> (הסוגר של ingredients-card)
+-->
+
+<div class="filter-card ingredients-card">
+    <div class="filter-header">
+        <h3>🥬 יש לי במקרר...</h3>
+    </div>
+    <div class="filter-body">
+        <div class="ingredients-wrapper">
+
+            <div class="ingredient-input-item"
+                *ngFor="let ing of ingredientInputs; let i = index; trackBy: trackByIndex">
+                
+                <!-- ✅ מכולה ל-Autocomplete -->
+                <div class="autocomplete-input-container">
+                    <input 
+                        type="text" 
+                        [value]="ingredientInputs[i]"
+                        (input)="updateIngredient(i, $any($event.target).value)" 
+                        (blur)="closeIngredientSuggestions(i)"
+                        (keyup.enter)="addIngredientInput()"
+                        placeholder="לדוג': קמח"
+                        autocomplete="off"
+                    />
+                    
+                    <!-- ✅ רשימת הצעות נפתחת -->
+                    <div class="ingredient-suggestions" *ngIf="showSuggestions[i]">
+                        <div 
+                            class="ingredient-suggestion-item"
+                            *ngFor="let suggestion of filteredSuggestions[i]"
+                            (mousedown)="selectIngredientSuggestion(i, suggestion.name)"
+                        >
+                            <span [innerHTML]="highlightIngredientMatch(suggestion.name, i)"></span>
+                        </div>
+                    </div>
+
+                    <!-- ✅ הודעת טעינה -->
+                    <div class="ingredient-suggestions loading" 
+                         *ngIf="isLoadingIngredients && ingredientInputs[i].length >= 2">
+                        <div class="ingredient-suggestion-item">
+                            טוען...
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-remove-ing" (click)="removeIngredientInput(i)"
+                    [disabled]="ingredientInputs.length === 1 && !ingredientInputs[0]">
+                    ✕
+                </button>
+            </div>
+        </div>
+        
+        <div class="ing-actions">
+            <button type="button" class="btn-text" (click)="addIngredientInput()">
+                + הוסף את הרכיב {{ lastIngredientLabel }}
+            </button>
+            <button type="button" class="btn-search-full" (click)="searchByIngredients()">
+                חפש מתכונים 🔍
+            </button>
+        </div>
+    </div>
+</div>
+    </aside>
+
+    <main class="main-gallery">
+        <header class="gallery-header">
+            <h1>המתכונים שלנו 🍽️</h1>
+        </header>
+
+        <div *ngIf="isLoading()" class="state-message loading">
+            <div class="spinner"></div>
+            <p>טוען מתכונים...</p>
+        </div>
+
+        <div *ngIf="errorMessage()" class="state-message error">
+            ❌ {{ errorMessage() }}
+        </div>
+
+        <div *ngIf="!isLoading() && recipes().length === 0" class="state-message empty">
+            <h3>לא נמצאו מתכונים 😔</h3>
+            <p>נסה לשנות את הסינון.</p>
+        </div>
+
+        <div *ngIf="!isLoading() && recipes().length > 0" class="recipe-grid">
+            <article class="recipe-card" *ngFor="let recipe of recipes()">
+                <div class="card-image-container" (click)="viewDetails(recipe.id)">
+                    <img [src]="recipe.image_url" [alt]="recipe.title" />
+                    <div class="image-badges">
+                        <span class="badge kashrut" [attr.data-type]="recipe.kashrut">{{ getKashrutLabel(recipe.kashrut)
+                            }}</span>
+                        <span class="badge time">⏱️ {{ recipe.prep_time }} דק'</span>
+                    </div>
+                    <div class="match-overlay" *ngIf="recipe.match_score">
+                        <span>{{ recipe.match_score }}% התאמה</span>
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <div class="content-top">
+                        <span class="category-label">{{ getCategoryLabel(recipe.category) }}</span>
+                        <h3 class="card-title" (click)="viewDetails(recipe.id)">{{ recipe.title }}</h3>
+                        <p class="card-desc">{{ recipe.description || 'ללא תיאור' }}</p>
+                    </div>
+
+                    <div class="content-bottom">
+                        <div class="rating-area">
+                            <div class="stars-display">
+                                <span *ngFor="let star of stars" class="star-icon"
+                                    [class.active]="star <= (hoverRating[recipe.id] || recipe.user_rating || 0)"
+                                    (mouseenter)="setHover(recipe.id, star)" (mouseleave)="clearHover(recipe.id)"
+                                    (click)="rateRecipe(recipe, star, $event)">★</span>
+                            </div>
+                            <span class="rating-number">
+                                ⭐ הדירוג הממוצע  {{ recipe.rating | number:'1.1-1' }}
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-view" (click)="viewDetails(recipe.id)">לצפיה במתכון  -></button>
+                            <button *ngIf="recipe.is_admin" class="btn-delete"
+                                (click)="deleteRecipe(recipe.id, $event)">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+</div>

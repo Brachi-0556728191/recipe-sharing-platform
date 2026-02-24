@@ -1,0 +1,303 @@
+<div class="container add-recipe-container" dir="rtl">
+  <h2>הוספת מתכון חדש 🍳</h2>
+  <!-- מוצגות כאן: הצלחה או שגיאה מתגובת השרת -->
+  
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>✅ בהצלחה!</strong>
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>❌ שגיאה:</strong>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- הטופס (Form) - Reactive Form עם אימות מובנה               -->
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+
+    <!-- 1️⃣ שדה: שם המתכון                                       -->
+    <!-- חובה + מקסימום 100 תווים                                 -->
+    <div class="form-group">
+      <label for="title">שם המתכון <span class="text-danger">*</span></label>
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        class="form-control"
+        placeholder="למשל: עוגת שוקולד של סבתא"
+        (blur)="checkField('title')"
+        maxlength="100">
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['title']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['title'] }}
+      </div>
+    </div>
+
+    <!-- 2️⃣ שדה: תיאור קצר של המתכון                              -->
+    <!-- אופציונלי                                                 -->
+    <div class="form-group">
+      <label for="description">תיאור קצר</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="3"
+        placeholder="תיאור קצר של המתכון..."></textarea>
+    </div>
+
+    <!-- 3️⃣ שדה: תמונה ראשית של המתכון                            -->
+    <!-- חובה - חייבת להיות תמונה תקינה                            -->
+    <div class="form-group">
+      <label for="main_image">תמונה ראשית <span class="text-danger">*</span></label>
+      <div class="file-input-group">
+        <input
+          type="file"
+          id="main_image"
+          (change)="onFileSelected($event)"
+          (blur)="checkField('mainImage')"
+          class="form-control-file"
+          accept="image/*">
+        <small class="form-text text-muted">קבלו קבצים: PNG, JPG, GIF, WebP</small>
+      </div>
+      <!-- שגיאה: אם לא בחרו תמונה -->
+      <div *ngIf="fieldErrors['mainImage']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['mainImage'] }}
+      </div>
+
+       <div *ngIf="imagePreviewUrl() || currentImageUrl" class="image-preview-container mt-3">
+        <div class="image-preview-wrapper">
+          <img [src]="currentImageUrl" alt="תצוגה מקדימה" class="image-preview" *ngIf="currentImageUrl">
+          <img [src]="imagePreviewUrl()" alt="תצוגה מקדימה" class="image-preview" *ngIf="imagePreviewUrl()">
+          <button type="button" class="btn btn-sm btn-outline-danger remove-image-btn" 
+            (click)="removeNewImage()" title="הסר תמונה">
+            ✕ הסר תמונה
+          </button>
+        </div>
+        <small class="text-success d-block mt-2">✅ נבחרה תמונה: {{ mainImageFile?.name }}</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+  <label for="servings">כמות מנות</label>
+  <input
+    id="servings"
+    type="number"
+    formControlName="servings"
+    class="form-control"
+    placeholder="למשל: 4"
+    min="1">
+  <small class="form-text text-muted">כמה אנשים המתכון מיועד להאכיל</small>
+</div>
+
+    <!-- 4️⃣ שדה: זמן הכנה (בדקות)                                 -->
+    <!-- חובה + ערך חיובי (מעל 0)                                  -->
+    <div class="form-group">
+      <label for="preparation_time">זמן הכנה (דקות) <span class="text-danger">*</span></label>
+      <input
+        id="preparation_time"
+        type="number"
+        formControlName="preparation_time"
+        class="form-control"
+        placeholder="למשל: 30"
+        min="1"
+        (blur)="checkField('preparation_time')">
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['preparation_time']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['preparation_time'] }}
+      </div>
+    </div>
+
+    <!-- 5️⃣ שדה: כשרות (בחירה מתוך רשימה)                        -->
+    <!-- חובה                                                      -->
+    <div class="form-group">
+      <label for="kashrut">כשרות <span class="text-danger">*</span></label>
+      <select
+        id="kashrut"
+        formControlName="kashrut"
+        class="form-control"
+        (blur)="checkField('kashrut')">
+        <option [value]="null">-- בחר כשרות --</option>
+        <option *ngFor="let option of kashrutOptions" [value]="option[0]">
+          {{ option[1] }}
+        </option>
+      </select>
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['kashrut']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['kashrut'] }}
+      </div>
+    </div>
+
+    <!-- 6️⃣ שדה: קטגוריה (בחירה מתוך רשימה)                      -->
+    <!-- חובה                                                      -->
+    <div class="form-group">
+      <label for="category">קטגוריה <span class="text-danger">*</span></label>
+      <select
+        id="category"
+        formControlName="category"
+        class="form-control"
+        (blur)="checkField('category')">
+        <option [value]="null">-- בחר קטגוריה --</option>
+        <option *ngFor="let option of categoryOptions" [value]="option[0]">
+          {{ option[1] }}
+        </option>
+      </select>
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['category']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['category'] }}
+      </div>
+    </div>
+
+    <!-- 7️⃣ שדה: דרגת קושי (בחירה מתוך רשימה)                    -->
+    <!-- חובה                                                      -->
+    <div class="form-group">
+      <label for="difficulty">דרגת קושי <span class="text-danger">*</span></label>
+      <select
+        id="difficulty"
+        formControlName="difficulty"
+        class="form-control"
+        (blur)="checkField('difficulty')">
+        <option [value]="null">-- בחר דרגת קושי --</option>
+        <option *ngFor="let option of difficultyOptions" [value]="option[0]">
+          {{ option[1] }}
+        </option>
+      </select>
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['difficulty']" class="text-danger small mt-1">
+        🔴 {{ fieldErrors['difficulty'] }}
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- קטע רכיבים (Ingredients Section)                           -->
+    <!-- כאן המשתמש מוסיף את המרכיבים של המתכון                   -->
+    <h4>🥄 רכיבים</h4>
+
+    <!-- רשימת הרכיבים שהוסיפו -->
+    <div class="ingredients-list">
+      <!-- לכל רכיב בנפרד -->
+      <div *ngFor="let ingredient of ingredients; let i = index" class="input-group mb-2">
+        
+        <!-- כפתור הסרה -->
+        <button
+          class="btn btn-outline-danger"
+          type="button"
+          (click)="removeIngredient(i)"
+          title="הסר רכיב זה">
+          הסר
+        </button>
+
+        <!-- יחידת מידה (למשל: כוסות, גרם, כפות) -->
+        <!-- חובה: לא יכול להיות ריק -->
+        <input
+          type="text"
+          [(ngModel)]="ingredient.unit"
+          [ngModelOptions]="{standalone: true}"
+          (change)="validateIngredients()"
+          class="form-control col-2"
+          placeholder="יחידת מידה">
+
+        <!-- כמות (מספר) -->
+        <!-- חובה: חייבת להיות מעל 0 -->
+        <input
+          type="number"
+          [(ngModel)]="ingredient.amount"
+          [ngModelOptions]="{standalone: true}"
+          (change)="validateIngredients()"
+          class="form-control col-2"
+          placeholder="כמות"
+          min="0"
+          step="0.1">
+
+        <!-- שם הרכיב (למשל: קמח, סוכר, ביצה) -->
+        <!-- חובה: לא יכול להיות ריק -->
+        <input
+          type="text"
+          [(ngModel)]="ingredient.name"
+          [ngModelOptions]="{standalone: true}"
+          (change)="validateIngredients()"
+          class="form-control"
+          placeholder="שם רכיב">
+
+        <!-- מספור אוטומטי של הרכיבים -->
+        <span class="input-group-text">{{ i + 1 }}</span>
+      </div>
+
+      <!-- הצגת שגיאות לכל רכיב אם קיימות -->
+      <div *ngFor="let error of ingredientErrors | keyvalue" class="alert alert-warning small mt-2" role="alert">
+        🔴 רכיב {{ error.key + 1 }}: {{ error.value }}
+      </div>
+    </div>
+
+    <!-- טופס הוסף רכיב חדש -->
+    <!-- המשתמש כותב את שם הרכיב ולוחץ "הוסף רכיב" -->
+    <div class="input-group mb-3 mt-3">
+      <!-- כפתור הוספה -->
+      <button
+        class="btn btn-outline-danger"
+        type="button"
+        (click)="addIngredient()"
+        title="הוסף רכיב חדש לרשימה">
+        הוסף רכיב
+      </button>
+      
+      <!-- שדה לשם הרכיב החדש -->
+      <input
+        type="text"
+        [(ngModel)]="newIngredientName"
+        [ngModelOptions]="{standalone: true}"
+        class="form-control"
+        placeholder="הוסף שם רכיב חדש"
+        (keyup.enter)="addIngredient()">
+    </div>
+
+    <hr>
+
+    <!-- 8️⃣ שדה: הוראות הכנה (טקסט ארוך)                          -->
+    <!-- חובה - זה החלק החשוב ביותר של המתכון                      -->
+    <div class="form-group">
+      <label for="instructions">הוראות הכנה <span class="text-danger">*</span></label>
+      <textarea
+        id="instructions"
+        formControlName="instructions"
+        class="form-control"
+        rows="5"
+        placeholder="תאר את שלבי הכנת המתכון..."
+        (blur)="checkField('instructions')"></textarea>
+      <!-- שגיאה מתחת לשדה אם קיימת -->
+      <div *ngIf="fieldErrors['instructions']" class="text-danger small mt-1">
+         {{ fieldErrors['instructions'] }}
+      </div>
+    </div>
+
+    <!-- 9️⃣ שדה: הערות נוספות (אופציונלי)                         -->
+    <!-- למשל: טיפים, טריקים, או תחליפים אפשריים                 -->
+    <div class="form-group">
+      <label for="notes">הערות נוספות</label>
+      <textarea
+        id="notes"
+        formControlName="notes"
+        class="form-control"
+        rows="2"
+        placeholder="טיפים, הערות או הצעות תחליפים..."></textarea>
+    </div>
+
+    <!-- כפתור שליחה (Submit Button)                                -->
+    <!-- אפשר לחץ כל הזמן אך בדיקות יעצרו את הפרוסס אם יש בעיות  -->
+    <button
+      type="submit"
+      class="btn btn-success btn-lg btn-block">
+
+      <!-- טקסט כפתור - משתנה בהתאם למצב -->
+      <span *ngIf="!isSubmitting">✍️ עדכן את המתכון</span>
+      
+      <!-- כשמשדרים - הצגת spinner וטקסט -->
+      <span *ngIf="isSubmitting">
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        🔄 ...מעדכן
+      </span>
+    </button>
+
+  </form>
+
+</div>
